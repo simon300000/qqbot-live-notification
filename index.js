@@ -45,6 +45,10 @@ https://live.bilibili.com/${roomid}`)]
 
     bot.on('message.group.@.me', async (_e, ctx) => {
       if (ctx.raw_message.includes('stats')) {
+        bot('send_group_msg', {
+          group_id: ctx.group_id,
+          message: [new CQText('「你好呀，我是莎茶酱」')]
+        })
         const { uname, title, follower, online } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower', 'online'])
         bot('send_group_msg', {
           group_id: ctx.group_id,
