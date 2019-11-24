@@ -1,9 +1,10 @@
-const { CQWebSocket, CQText } = require('cq-websocket')
+const { CQWebSocket } = require('cq-websocket')
+const got = require('got')
 
 const BiliAPI = require('bili-api')
 const { KeepLiveWS } = require('bilibili-live-ws')
 
-const { targetGroups, roomids, ws } = require('./config')
+const { targetGroups, roomids, ws, httpGroupMsgUrl } = require('./config')
 
 const bot = new CQWebSocket(ws)
 
@@ -34,25 +35,31 @@ Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
     live.on('LIVE', async () => {
       const { uname, title } = await BiliAPI({ roomid, mid }, ['uname', 'title'])
       targetGroups.forEach(targetGroup => {
-        bot('send_group_msg', {
-          group_id: targetGroup,
-          message: [new CQText(`${uname} 开播啦！
+        got(httpGroupMsgUrl, {
+          body: {
+            group_id: targetGroup,
+            message: `${uname} 开播啦！
 ${title}
-https://live.bilibili.com/${roomid}`)]
+https://live.bilibili.com/${roomid}`
+          }
         })
       })
     })
 
     bot.on('message.group.@.me', async (_e, ctx) => {
+      got(httpGroupMsgUrl, {
+        body: {
+          group_id: ctx.group_id,
+          message: '「你好呀，我是莎茶酱」'
+        }
+      })
       if (ctx.raw_message.includes('stats')) {
-        bot('send_group_msg', {
-          group_id: ctx.group_id,
-          message: [new CQText('「你好呀，我是莎茶酱」')]
-        })
         const { uname, title, follower, online } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower', 'online'])
-        bot('send_group_msg', {
-          group_id: ctx.group_id,
-          message: [new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online }, undefined, 2))]
+        got(httpGroupMsgUrl, {
+          body: {
+            group_id: ctx.group_id,
+            message: JSON.stringify({ mid, roomid, uname, title, follower, online }, undefined, 2)
+          }
         })
       }
     })
