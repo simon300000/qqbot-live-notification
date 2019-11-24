@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "bili-api": "^1.4.1",
+    "bilibili-live-ws": "^3.0.0",
     "cq-websocket": "^2.0.2"
   }
 }
