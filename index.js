@@ -28,7 +28,7 @@ bot.connect()
 const liveStatus = new Map()
 
 roomids.forEach(roomid => {
-  liveStatus.set(roomid, 0)
+  liveStatus.set(roomid, 1)
 })
 
 bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
