@@ -27,6 +27,10 @@ bot.connect()
 
 const liveStatus = new Map()
 
+roomids.forEach(roomid => {
+  liveStatus.set(roomid, 0)
+})
+
 bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
   .then(infos => infos.forEach(({ roomid, mid }) => {
     const live = new KeepLiveWS(roomid)
@@ -34,7 +38,7 @@ bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roo
 
     live.on('online', async online => {
       if (online > 1) {
-        if (liveStatus.get(mid) === 1) {
+        if (liveStatus.get(roomid) === 1) {
           const { uname, title } = await BiliAPI({ roomid, mid }, ['uname', 'title'])
           targetGroups.forEach(targetGroup => {
             bot('send_group_msg', {
@@ -45,7 +49,7 @@ ${title}]`)]
           })
         }
       }
-      liveStatus.set(mid, online)
+      liveStatus.set(roomid, online)
     })
 
     bot.on('message.group.@.me', async (_e, ctx) => {
