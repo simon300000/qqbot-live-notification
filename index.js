@@ -36,9 +36,10 @@ bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roo
     const live = new KeepLiveWS(roomid)
     live.on('live', () => console.log('live', mid))
 
-    live.on('online', async online => {
+    live.on('heartbeat', async online => {
       if (online > 1) {
         if (liveStatus.get(roomid) === 1) {
+          liveStatus.set(roomid, online)
           const { uname, title } = await BiliAPI({ roomid, mid }, ['uname', 'title'])
           targetGroups.forEach(targetGroup => {
             bot('send_group_msg', {
@@ -50,7 +51,6 @@ https://live.bilibili.com/${roomid}`)]
           })
         }
       }
-      liveStatus.set(roomid, online)
     })
 
     bot.on('message.group.@.me', async (_e, ctx) => {
@@ -59,10 +59,10 @@ https://live.bilibili.com/${roomid}`)]
         message: [new CQText('「你好呀，我是莎茶酱」')]
       })
       if (ctx.raw_message.includes('stats')) {
-        const { uname, title, follower, online } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower', 'online'])
+        const { uname, title, follower } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower'])
         bot('send_group_msg', {
           group_id: ctx.group_id,
-          message: [new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online }, undefined, 2))]
+          message: [new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online: live.online }, undefined, 2))]
         })
       }
       if (ctx.raw_message.includes('test')) {
