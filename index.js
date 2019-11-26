@@ -44,7 +44,8 @@ bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roo
             bot('send_group_msg', {
               group_id: targetGroup,
               message: [new CQText(`${uname} 开播啦！
-${title}]`)]
+「${title}」
+https://live.bilibili.com/${roomid}`)]
             })
           })
         }
