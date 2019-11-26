@@ -27,7 +27,7 @@ bot.connect()
 
 const liveStatus = new Map()
 
-Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
+bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
   .then(infos => infos.forEach(({ roomid, mid }) => {
     const live = new KeepLiveWS(roomid)
     live.on('live', () => console.log('live', mid))
@@ -63,3 +63,4 @@ https://live.bilibili.com/${roomid}`)]
       }
     })
   }))
+)
