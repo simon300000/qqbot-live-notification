@@ -50,6 +50,8 @@ https://live.bilibili.com/${roomid}`)]
             })
           })
         }
+      } else {
+        liveStatus.set(roomid, online)
       }
     })
 
