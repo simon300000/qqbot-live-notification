@@ -49,7 +49,7 @@ bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roo
   .then(infos => infos.forEach(({ roomid, mid }) => {
     const sendLiveMessage = async () => {
       const { uname, title } = await BiliAPI({ roomid, mid }, ['uname', 'title'])
-      dispatch(new CQAt('all'), new CQText(`${uname} 开播啦！
+      dispatch(new CQText(`${uname} 开播啦！
 「${title}」
 https://live.bilibili.com/${roomid}`))
     }
