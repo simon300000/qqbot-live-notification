@@ -81,7 +81,7 @@ https://live.bilibili.com/${roomid}`))
       if (ctx.raw_message.includes('test')) {
         send(new CQText(`https://live.bilibili.com/${roomid}`))
       }
-      if (ctx.raw_message.includes('at') && admins.includes(ctx.user_id)) {
+      if (ctx.raw_message.includes('testat') && admins.includes(ctx.user_id)) {
         send(new CQAt('all'))
       }
     })
