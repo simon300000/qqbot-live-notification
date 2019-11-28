@@ -3,6 +3,7 @@ module.exports = {
     host: '127.0.0.1',
     port: 6701
   },
+  admins: [2241139100],
   targetGroups: [640969703],
   roomids: [870004]
 }
