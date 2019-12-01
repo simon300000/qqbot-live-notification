@@ -3,7 +3,7 @@ const { CQWebSocket, CQText } = require('cq-websocket')
 const BiliAPI = require('bili-api')
 const { KeepLiveWS } = require('bilibili-live-ws')
 
-const { list } = require('./config')
+const { list, admins } = require('./config')
 
 list.forEach(({ ws, targetGroups, roomids, hi }) => {
   const bot = new CQWebSocket(ws)
@@ -70,17 +70,19 @@ https://live.bilibili.com/${roomid}`))
       })
 
       bot.on('message.group.@.me', async (_e, ctx) => {
-        const send = (...message) => bot('send_group_msg', {
-          group_id: ctx.group_id,
-          message
-        })
-        send(new CQText(hi))
-        if (ctx.raw_message.includes('stats')) {
-          const { uname, title, follower } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower'])
-          send(new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online: live.online }, undefined, 2)))
-        }
-        if (ctx.raw_message.includes('test')) {
-          send(new CQText(`https://live.bilibili.com/${roomid}`))
+        if (targetGroups.includes(ctx.group_id) || admins.includes(ctx.user_id)) {
+          const send = (...message) => bot('send_group_msg', {
+            group_id: ctx.group_id,
+            message
+          })
+          send(new CQText(hi))
+          if (ctx.raw_message.includes('stats')) {
+            const { uname, title, follower } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower'])
+            send(new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online: live.online }, undefined, 2)))
+          }
+          if (ctx.raw_message.includes('test')) {
+            send(new CQText(`https://live.bilibili.com/${roomid}`))
+          }
         }
       })
     }))

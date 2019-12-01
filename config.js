@@ -7,5 +7,6 @@ module.exports = {
     hi: '「你好呀，我是莎茶酱」',
     targetGroups: [640969703],
     roomids: [870004]
-  }]
+  }],
+  admins: [2241139100]
 }
