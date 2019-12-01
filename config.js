@@ -1,9 +1,12 @@
 module.exports = {
-  ws: {
-    host: '127.0.0.1',
-    port: 6701
-  },
-  admins: [2241139100],
-  targetGroups: [640969703],
-  roomids: [870004]
+  list: [{
+    ws: {
+      host: '127.0.0.1',
+      port: 6701
+    },
+    hi: '「你好呀，我是莎茶酱」',
+    targetGroups: [640969703],
+    roomids: [870004]
+  }],
+  admins: [2241139100]
 }
