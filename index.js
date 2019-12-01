@@ -1,9 +1,9 @@
-const { CQWebSocket, CQText, CQAt } = require('cq-websocket')
+const { CQWebSocket, CQText } = require('cq-websocket')
 
 const BiliAPI = require('bili-api')
 const { KeepLiveWS } = require('bilibili-live-ws')
 
-const { list, admins } = require('./config')
+const { list } = require('./config')
 
 list.forEach(({ ws, targetGroups, roomids, hi }) => {
   const bot = new CQWebSocket(ws)
@@ -81,9 +81,6 @@ https://live.bilibili.com/${roomid}`))
         }
         if (ctx.raw_message.includes('test')) {
           send(new CQText(`https://live.bilibili.com/${roomid}`))
-        }
-        if (ctx.raw_message.includes('testat') && admins.includes(ctx.user_id)) {
-          send(new CQAt('all'))
         }
       })
     }))
