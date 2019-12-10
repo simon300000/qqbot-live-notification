@@ -53,7 +53,7 @@ list.forEach(({ ws, targetGroups, roomids, hi }) => {
 
   bot.on('message.group.@.me', async (_e, ctx) => {
     if (targetGroups.includes(ctx.group_id) || admins.includes(ctx.user_id)) {
-      send(new CQText(ctx.group_id)(hi))
+      send(ctx.group_id)(new CQText(hi))
     }
   })
 
