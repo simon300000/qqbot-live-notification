@@ -11,6 +11,15 @@ node index.js
 
 或者可以通过`ecosystem.config.js`使用pm2
 
+### 指令
+
+通过@bot的QQ号然后带一些关键词
+
+@会回复hi内容
+
+* `stats`: 输出JSON `{ mid, roomid, uname, title, follower, online }`
+* `test`: 输出一个直播间地址
+
 ### 配置
 
 编辑`config.js`文件
