@@ -46,6 +46,17 @@ list.forEach(({ ws, targetGroups, roomids, hi }) => {
     message
   }))
 
+  const send = id => (...message) => bot('send_group_msg', {
+    group_id: id,
+    message
+  })
+
+  bot.on('message.group.@.me', async (_e, ctx) => {
+    if (targetGroups.includes(ctx.group_id) || admins.includes(ctx.user_id)) {
+      send(new CQText(ctx.group_id)(hi))
+    }
+  })
+
   bot.once('socket.connect', () => Promise.all(roomids.map(roomid => BiliAPI({ roomid }, ['mid', 'roomid'])))
     .then(infos => infos.forEach(({ roomid, mid }) => {
       const sendLiveMessage = async () => {
@@ -71,17 +82,12 @@ https://live.bilibili.com/${roomid}`))
 
       bot.on('message.group.@.me', async (_e, ctx) => {
         if (targetGroups.includes(ctx.group_id) || admins.includes(ctx.user_id)) {
-          const send = (...message) => bot('send_group_msg', {
-            group_id: ctx.group_id,
-            message
-          })
-          send(new CQText(hi))
           if (ctx.raw_message.includes('stats')) {
             const { uname, title, follower } = await BiliAPI({ mid, roomid }, ['uname', 'title', 'follower'])
-            send(new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online: live.online }, undefined, 2)))
+            send(ctx.group_id)(new CQText(JSON.stringify({ mid, roomid, uname, title, follower, online: live.online }, undefined, 2)))
           }
           if (ctx.raw_message.includes('test')) {
-            send(new CQText(`https://live.bilibili.com/${roomid}`))
+            send(ctx.group_id)(new CQText(`https://live.bilibili.com/${roomid}`))
           }
         }
       })
